@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cross-Border E-Commerce Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="sidebar">
+        <h1>🌍 Market Dashboard</h1>
+        <form method="post">
+          <label>
+            Product / category
+            <input type="text" name="product" value="{{ product }}" />
+          </label>
+
+          <label>
+            Destination market
+            <input type="text" name="destination" value="{{ destination }}" />
+          </label>
+
+          <label>
+            Market language
+            <select name="market_language">
+              {% for option in ['en', 'ja', 'ko', 'zh', 'de', 'fr', 'es', 'pt'] %}
+                <option value="{{ option }}" {% if option == market_language %}selected{% endif %}>{{ option }}</option>
+              {% endfor %}
+            </select>
+          </label>
+
+          <label>
+            Target channel
+            <select name="target_channel">
+              {% for option in ['Amazon', 'eBay', 'Shopify', 'TikTok Shop', 'Own storefront', 'Marketplace mix'] %}
+                <option value="{{ option }}" {% if option == target_channel %}selected{% endif %}>{{ option }}</option>
+              {% endfor %}
+            </select>
+          </label>
+
+          <label>
+            Price band
+            <select name="price_band">
+              {% for option in ['low', 'medium', 'premium'] %}
+                <option value="{{ option }}" {% if option == price_band %}selected{% endif %}>{{ option }}</option>
+              {% endfor %}
+            </select>
+          </label>
+
+          <label>
+            Budget level
+            <select name="budget">
+              {% for option in ['lean', 'moderate', 'aggressive'] %}
+                <option value="{{ option }}" {% if option == budget %}selected{% endif %}>{{ option }}</option>
+              {% endfor %}
+            </select>
+          </label>
+
+          <label>Priority constraints</label>
+          <div class="checkboxes">
+            {% set constraint_values = ['Margins', 'Logistics', 'Compliance', 'Speed', 'Brand fit', 'Inventory risk'] %}
+            {% for item in constraint_values %}
+              <label class="check-item">
+                <input type="checkbox" name="constraints" value="{{ item }}"
+                  {% if item in constraints %}checked{% endif %} />
+                {{ item }}
+              </label>
+            {% endfor %}
+          </div>
+
+          <label>
+            Analyst notes
+            <textarea name="notes" rows="4">{{ notes }}</textarea>
+          </label>
+
+          <button type="submit">Generate market brief</button>
+          <a class="download-btn" href="/download?product={{ product|urlencode }}&destination={{ destination|urlencode }}">Download report</a>
+        </form>
+      </aside>
+
+      <main class="content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Cross-border e-commerce research</p>
+            <h2>{{ destination }} · {{ product }}</h2>
+          </div>
+        </header>
+
+        <section class="cards summary-cards">
+          <div class="card accent">
+            <span class="badge">Opportunity score</span>
+            <h3>{{ brief.summary.opportunity_score }}/100</h3>
+            <p>{{ brief.summary.headline }}</p>
+          </div>
+          <div class="card">
+            <span class="badge">Primary channel</span>
+            <h3>{{ brief.target_channel }}</h3>
+            <p>{{ brief.final_note }}</p>
+          </div>
+          <div class="card">
+            <span class="badge">Market profile</span>
+            <h3>{{ brief.market_language }}</h3>
+            <p>{{ brief.destination }} / {{ brief.price_band }}</p>
+          </div>
+        </section>
+
+        <nav class="tabs" aria-label="Report sections">
+          <button class="tab-button active" data-target="trend">Trend analysis</button>
+          <button class="tab-button" data-target="platform">Platform fit</button>
+          <button class="tab-button" data-target="product">Product opportunity</button>
+          <button class="tab-button" data-target="seo">SEO plan</button>
+          <button class="tab-button" data-target="risk">Risk & data gaps</button>
+        </nav>
+
+        <section class="panel tab-panel active" id="trend">
+          <h3>Trend analysis</h3>
+          <p class="lead">{{ brief.trend_analysis.headline }}</p>
+          <pre>{{ brief.trend_analysis | tojson(indent=2) }}</pre>
+        </section>
+
+        <section class="panel tab-panel" id="platform">
+          <h3>Platform recommendation</h3>
+          <p class="lead">{{ brief.platform_recommendation.recommendation }}</p>
+          <pre>{{ brief.platform_recommendation | tojson(indent=2) }}</pre>
+        </section>
+
+        <section class="panel tab-panel" id="product">
+          <h3>Product opportunity</h3>
+          <p class="lead">{{ brief.product_opportunity.why_it_works }}</p>
+          <pre>{{ brief.product_opportunity | tojson(indent=2) }}</pre>
+        </section>
+
+        <section class="panel tab-panel" id="seo">
+          <h3>SEO & keyword plan</h3>
+          <p class="lead">{{ brief.seo_plan.recommendation }}</p>
+          <pre>{{ brief.seo_plan | tojson(indent=2) }}</pre>
+        </section>
+
+        <section class="panel tab-panel" id="risk">
+          <h3>Risk assessment & data gaps</h3>
+          <p class="lead">{{ brief.risk_assessment.risk_level }}</p>
+          <pre>{{ brief.risk_assessment | tojson(indent=2) }}</pre>
+          <pre>{{ brief.data_gaps | tojson(indent=2) }}</pre>
+        </section>
+
+        <section class="panel markdown-panel">
+          <h3>Detailed market report</h3>
+          <div class="markdown-box">{{ brief.report_markdown | safe }}</div>
+        </section>
+      </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>

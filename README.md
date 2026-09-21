@@ -17,6 +17,19 @@ The system is designed to help businesses answer practical questions such as:
 
 Rather than acting as a generic chatbot, it is structured as a strategic research assistant for international expansion, market discovery, and business development support.
 
+## Dashboard Preview
+
+<div align="center">
+  <img src="imgs/dashboard.png" alt="Market expansion dashboard overview" width="900" />
+  <p><em>Interactive market expansion dashboard for product, destination, and strategy analysis.</em></p>
+</div>
+
+
+<div align="center" style="margin-top: 24px;">
+  <img src="imgs/img.png" alt="Additional project image" width="900" />
+  <p><em>Business-focused research workflow designed for global expansion planning and decision support.</em></p>
+</div>
+
 ## What This Repo Includes
 
 - AI-assisted research workflow for target markets and product categories
